@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Weather App</title>
+    <style>
+        body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+}
+
+#weather-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input {
+    padding: 8px;
+    margin-right: 5px;
+}
+
+button {
+    padding: 8px;
+    cursor: pointer;
+}
+
+#weather-info {
+    margin-top: 20px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather App</h1>
+        <div id="weather-container">
+            <label for="location">Enter location:</label>
+            <input type="text" id="location" placeholder="City, Country">
+            <button onclick="getWeather()">Get Weather</button>
+
+            <div id="weather-info"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const apiKey = '007a9a10751df3fb416c6cf43389b29e';
+
+function getWeather() {
+    const locationInput = document.getElementById('location');
+    const location = locationInput.value;
+
+    if (location.trim() === '') {
+        alert('Please enter a location.');
+        return;
+    }
+
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${007a9a10751df3fb416c6cf43389b29e}&units=metric`;
+
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            displayWeather(data);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
+
+function displayWeather(data) {
+    const weatherInfoContainer = document.getElementById('weather-info');
+    weatherInfoContainer.innerHTML = '';
+
+    const cityName = data.name;
+    const temperature = data.main.temp;
+    const description = data.weather[0].description;
+
+    const weatherInfo = document.createElement('div');
+    weatherInfo.innerHTML = `
+        <h2>${cityName}</h2>
+        <p>Temperature: ${temperature} &deg;C</p>
+        <p>Description: ${description}</p>
+    `;
+
+    weatherInfoContainer.appendChild(weatherInfo);
+}
+
+    </script>
+</body>
+</html>
